@@ -1,8 +1,8 @@
 import React from 'react';
 import './App.css';
-import Main from './components/Main';
+import Tasklist from './components/Tasklist';
 
 export default function App() {
-   return < Main />;
+   return < Tasklist />;
 }
 
