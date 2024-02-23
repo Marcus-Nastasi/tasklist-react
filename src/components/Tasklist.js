@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { FaPlus, FaEdit, FaWindowClose } from 'react-icons/fa'
+import { FaEdit, FaWindowClose } from 'react-icons/fa';
+import Form from "./Form";
 
 export default class Main extends Component {
    constructor(props) {
@@ -7,11 +8,9 @@ export default class Main extends Component {
 
       this.state = {
          novaTarefa: '',
-         tasks: []
+         tasks: [],
+         index: -1
       };
-
-      this.writeTask = this.writeTask.bind(this);
-      this.addTask = this.addTask.bind(this);
    }
 
    render() {
@@ -23,27 +22,8 @@ export default class Main extends Component {
                <section className="flex flex-col">
                   <h2 className="text-6xl p-5">tasklist</h2>
 
-                  <form className="p-2 flex justify-center" action="#">
-                     <section className="p-2 flex flex-col items-center w-1/2">
-
-                        <label htmlFor="task" className="my-5 text-2xl">Adicionar tarefa</label>
-
-                        <div className="flex flex-row justify-center">
-
-                           <input onChange={this.writeTask} itemID="inp" 
-                              className="p-2 rounded-sm focus:border-none focus:outline-8 focus:outline-green-400" 
-                              type="text" 
-                              name="task"
-                              value={novaTarefa}
-                              />
-
-                           <button onClick={this.addTask} type="submit" className="uppercase bg-green-500 text-slate-200 p-3 rounded-md transition-all ease-in-out duration-500 hover:bg-green-600">
-                              < FaPlus />
-                           </button>
-                        </div>
-
-                     </section>
-                  </form>
+                  < Form 
+                     writeTask={this.writeTask} novaTarefa={novaTarefa} addTask={this.addTask} />
 
                   <ul itemID="sec-task" className="w-1/2 self-center py-10 list-disc flex flex-col-reverse">
                      {
@@ -55,10 +35,10 @@ export default class Main extends Component {
 
                               <div className="flex flex-row">
 
-                                 <FaEdit onClick={this.handleEdit} 
+                                 <FaEdit onClick={e => this.handleEdit(e, i)} 
                                     className="mx-5 text-xl text-blue-800 hover:cursor-pointer hover:text-blue-900" />
 
-                                 <FaWindowClose onClick={this.handleDelete} 
+                                 <FaWindowClose onClick={e => this.handleDelete(e, i)} 
                                     className="text-xl text-red-800 hover:cursor-pointer hover:text-red-900" />
 
                               </div>
@@ -93,35 +73,59 @@ export default class Main extends Component {
       return;
    }
 
-   writeTask(e) {
+   writeTask = e => {
       return this.setState({
          novaTarefa: e.target.value
       });
    }
 
-   addTask(e) {
+   addTask = e => {
       e.preventDefault();
-      const { tasks } = this.state;
+      const { tasks, index } = this.state;
       var { novaTarefa } = this.state;
 
       const tarefaAdicionar = [ ...tasks ];
 
-      this.setState({
-         tasks: [...tarefaAdicionar, novaTarefa] 
-      });
+      if(index === -1) {
+         this.setState({
+            tasks: [...tarefaAdicionar, novaTarefa] 
+         });
+
+         return this.setState({
+            novaTarefa: ''
+         });
+      }
+
+      tarefaAdicionar[index] = novaTarefa;
 
       this.setState({
+         tasks: [...tarefaAdicionar],
+         index: -1
+      });
+
+      return this.setState({
          novaTarefa: ''
       });
-      return;
    }
 
-   handleEdit = e => {
+   handleEdit = (e, index) => {
+      const { tasks } = this.state;
 
+      return this.setState({
+         index,
+         novaTarefa: tasks[index]
+      });
    }
 
-   handleDelete = e => {
+   handleDelete = (e, index) => {
+      const { tasks } = this.state;
+      const copyTasks = [...tasks];
 
+      copyTasks.splice(index, 1);
+
+      return this.setState({
+         tasks: [...copyTasks]
+      })
    }
 }
 
