@@ -22,7 +22,7 @@ export default class Main extends Component {
                <section className="flex flex-col">
                   <h2 className="text-6xl p-5">tasklist</h2>
 
-                  < Form writeTask={this.writeTask} novaTarefa={novaTarefa} addTask={this.addTask} />
+                  <Form writeTask={this.writeTask} novaTarefa={novaTarefa} addTask={this.addTask} />
 
                   <Tasks tasks={tasks} handleEdit={this.handleEdit} handleDelete={this.handleDelete} />
 
